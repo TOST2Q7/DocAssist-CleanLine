@@ -1,5 +1,6 @@
 // Generates DocAssist logo options: icons (light + inverse), wordmark B, lockups, preview.html.
-// Deps are not in the app. In a temp dir: `npm i opentype.js @fontsource/unbounded`, then from that dir
+// Round 3: the user's hammer-and-wrench badge reworked. Deps are not in the app. In a temp dir:
+// `npm i opentype.js @fontsource/unbounded`, then from that dir
 // `NODE_PATH=$PWD/node_modules node <this file> <outDir>`; preview.png = screenshot of preview.html.
 // Wordmark font: Unbounded (OFL), free stand-in for the brand's Actay Wide (commercial).
 const fs = require('fs');
@@ -9,10 +10,13 @@ const opentype = require('opentype.js');
 const OUT = process.argv[2];
 fs.mkdirSync(OUT, { recursive: true });
 
-const C = { blue: '#0804FF', black: '#000000', white: '#FFFFFF' };
-// Themes: m = main shape, k = secondary shape, c = cut-outs (= background color).
-const LIGHT = { id: 'l', m: C.blue, k: C.black, c: C.white, text: C.black, accent: C.blue };
-const INVERSE = { id: 'i', m: C.white, k: C.white, c: C.blue, text: C.white, accent: C.white };
+const C = {
+  blue: '#0804FF',
+  black: '#000000',
+  white: '#FFFFFF',
+  yellow: '#F6EB19', // source badge
+  red: '#EE2E2E', // app error red (brandbook icon library); source badge red is close
+};
 const ELL_ANGLE = 42; // brand oval tilt, measured from the РСО logo
 const ELL_RATIO = 1.8;
 const SLANT = -12; // deg, like "КРУТ" in the РСО logo
@@ -51,113 +55,114 @@ function textPath(text, x, baseline, size, tracking = 0.01) {
 const skew = (base) =>
   `transform="translate(0 ${n(base)}) skewX(${SLANT}) translate(0 ${n(-base)})"`;
 
-// "D" upright + "A" slanted (monogram of wordmark B), centered at (cx, cy) with given cap height.
-function monogram(cx, cy, cap, fill) {
-  const size = cap / CAP;
-  const gap = 0.05 * size;
-  const probe = textPath('D', 0, 0, size).end + gap + textPath('A', 0, 0, size).end;
-  const x = cx - probe / 2;
-  const base = cy + cap / 2;
-  const d = textPath('D', x, base, size);
-  const a = textPath('A', d.end + gap, base, size);
-  return `<path d="${d.d}" fill="${fill}"/><path d="${a.d}" fill="${fill}" ${skew(base)}/>`;
+// ---------- tools (local coords: vertical, working end up, axis x=50; crossing at y=52) ----------
+const HAMMER = 'M45.5 33H54.5V86H45.5Z M30 17H62L68 23V33H30Z';
+const WRENCH = 'M45.5 36H54.5V86H45.5Z M32 18L38 9H44V24H56V9H62L68 18V30L60 39H40L32 30Z';
+const PEN = 'M44 22H56V72H44Z M44 72H56L50 87Z M44 12H56V19H44Z'; // pencil: body, tip, eraser cap
+
+// Crossed pair: `a` leans left (head top-left), `b` leans right (head top-right) and lies on top,
+// separated by a cut stroke in the background color.
+function crossed(a, b, fill, cutColor, s = 1) {
+  const g = (rot, d, extra = '') =>
+    `<g transform="translate(50 52) rotate(${rot}) scale(${s}) translate(-50 -52)"><path d="${d}" fill="${fill}" ${extra}/></g>`;
+  return (
+    g(-45, a) + g(45, b, `stroke="${cutColor}" stroke-width="${n(4 / s)}" paint-order="stroke"`)
+  );
 }
 
-// ---------- shapes (viewBox 0 0 100 100) ----------
-const ell = (cx, cy, rx, ry, angle, fill, extra = '') =>
-  `<ellipse cx="${n(cx)}" cy="${n(cy)}" rx="${rx}" ry="${n(ry)}" transform="rotate(${angle} ${n(cx)} ${n(cy)})" fill="${fill}" ${extra}/>`;
-const oval = (cx, cy, rx, fill, extra = '') =>
-  ell(cx, cy, rx, rx / ELL_RATIO, ELL_ANGLE, fill, extra);
-const cut = (t, w) => `stroke="${t.c}" stroke-width="${w}"`;
-const RAD = (ELL_ANGLE * Math.PI) / 180;
+const ell = (cx, cy, rx, ry, angle, fill) =>
+  `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${n(ry)}" transform="rotate(${angle} ${cx} ${cy})" fill="${fill}"/>`;
 
+// Each variant: light + inverse (on brand blue) palettes; `accent` colors ASSIST in the lockup.
 const icons = {
-  clip: {
-    title: 'Скрепка',
-    svg: (t) =>
-      `<g transform="rotate(-48 50 50)"><path d="M60 36V66A10 10 0 0 1 40 66V22A15 15 0 0 1 70 22V74A20 20 0 0 1 30 74V34" fill="none" stroke="${t.m}" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g>`,
+  badge: {
+    title: 'Значок в родных цветах (перерисован)',
+    light: { bg: C.yellow, fg: C.red, accent: C.red },
+    inverse: { bg: C.yellow, fg: C.red },
+    svg: (p) =>
+      `<circle cx="50" cy="50" r="48" fill="${p.bg}"/>` + crossed(HAMMER, WRENCH, p.fg, p.bg, 0.74),
   },
-  stack: {
-    title: 'Стопка листов из овалов',
-    svg: (t) =>
-      ell(40, 34, 32, 17.8, -24, t.k, cut(t, 5)) +
-      ell(50, 50, 32, 17.8, -24, t.k, cut(t, 5)) +
-      ell(60, 66, 32, 17.8, -24, t.m, cut(t, 5)),
-  },
-  check: {
-    title: 'Галочка из лепестков',
-    svg: (t) => ell(31, 59, 17, 10, 45, t.k) + ell(61, 45, 35, 11, -52, t.m, cut(t, 4)),
-  },
-  reply: {
-    title: 'Реплика помощника',
-    svg: (t) =>
-      oval(52, 44, 48, t.m) +
-      `<path d="M27 64 L8 93 L44 75 Z" fill="${t.m}"/>` +
-      [-15, 0, 15]
-        .map((o) => oval(52 + o * Math.cos(RAD), 44 + o * Math.sin(RAD), 6.5, t.c))
-        .join(''),
-  },
-  curl: {
-    title: 'Лист с загнутым углом-четвертью',
-    svg: (t) =>
-      `<mask id="curl-${t.id}"><rect width="100" height="100" fill="#fff"/><circle cx="88" cy="12" r="30" fill="#000"/></mask>` +
-      `<rect x="12" y="12" width="76" height="76" fill="${t.m}" mask="url(#curl-${t.id})"/>` +
-      `<path d="M58 12A30 30 0 0 1 88 42H58Z" fill="${t.k}" ${cut(t, 5)} stroke-linejoin="round"/>`,
-  },
-  folder: {
-    title: 'Папка с овальным ярлыком',
-    svg: (t) =>
-      `<rect x="10" y="26" width="80" height="60" fill="${t.k}"/>` +
-      ell(33, 26, 23, 11, 0, t.k) +
-      `<rect x="10" y="41" width="80" height="45" fill="${t.m}" ${cut(t, 5)}/>` +
-      `<rect x="7" y="86" width="86" height="6" fill="${t.c}"/>`,
-  },
-  tile: {
-    title: 'Монограмма DA в плитке',
-    svg: (t) => `<rect width="100" height="100" fill="${t.m}"/>` + monogram(50, 50, 34, t.c),
+  blue: {
+    title: 'Значок в фирменном синем',
+    light: { bg: C.blue, fg: C.white, accent: C.blue },
+    inverse: { bg: C.white, fg: C.blue },
+    svg: (p) =>
+      `<circle cx="50" cy="50" r="48" fill="${p.bg}"/>` + crossed(HAMMER, WRENCH, p.fg, p.bg, 0.74),
   },
   oval: {
-    title: 'Монограмма DA в овале',
-    svg: (t) => oval(50, 50, 54, t.m) + monogram(50, 50, 20, t.c),
+    title: 'В фирменном овале',
+    light: { bg: C.blue, fg: C.white, accent: C.blue },
+    inverse: { bg: C.white, fg: C.blue },
+    svg: (p) =>
+      ell(50, 50, 56, 56 / ELL_RATIO, ELL_ANGLE, p.bg) + crossed(HAMMER, WRENCH, p.fg, p.bg, 0.6),
+  },
+  tile: {
+    title: 'Плитка паттерна',
+    light: { bg: C.blue, fg: C.white, accent: C.blue },
+    inverse: { bg: C.white, fg: C.blue },
+    svg: (p) =>
+      `<rect width="100" height="100" fill="${p.bg}"/>` + crossed(HAMMER, WRENCH, p.fg, p.bg, 0.8),
+  },
+  bare: {
+    title: 'Только инструменты',
+    light: { bg: C.white, fg: C.blue, accent: C.blue },
+    inverse: { bg: C.blue, fg: C.white },
+    svg: (p) => crossed(HAMMER, WRENCH, p.fg, p.bg, 1.05),
+  },
+  penBadge: {
+    title: 'Карандаш + ключ, родные цвета («инструменты для документов»)',
+    light: { bg: C.yellow, fg: C.red, accent: C.red },
+    inverse: { bg: C.yellow, fg: C.red },
+    svg: (p) =>
+      `<circle cx="50" cy="50" r="48" fill="${p.bg}"/>` + crossed(PEN, WRENCH, p.fg, p.bg, 0.74),
+  },
+  penBlue: {
+    title: 'Карандаш + ключ, фирменный синий',
+    light: { bg: C.blue, fg: C.white, accent: C.blue },
+    inverse: { bg: C.white, fg: C.blue },
+    svg: (p) =>
+      `<circle cx="50" cy="50" r="48" fill="${p.bg}"/>` + crossed(PEN, WRENCH, p.fg, p.bg, 0.74),
   },
 };
 
 // ---------- wordmark B, lockups, preview ----------
-function wordmark(x, y, cap, t) {
+function wordmark(x, y, cap, text, accent) {
   const size = cap / CAP;
   const base = y + cap;
   const a = textPath('DOC', x, base, size);
   const b = textPath('ASSIST', a.end + 0.06 * size, base, size);
   const shift = Math.tan((-SLANT * Math.PI) / 180) * cap;
   return {
-    svg: `<path d="${a.d}" fill="${t.text}"/><path d="${b.d}" fill="${t.accent}" ${skew(base)}/>`,
+    svg: `<path d="${a.d}" fill="${text}"/><path d="${b.d}" fill="${accent}" ${skew(base)}/>`,
     width: b.end - x + shift,
   };
 }
 const svgDoc = (w, h, body) =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(w)} ${n(h)}">${body}</svg>\n`;
-const lockup = (id, t) => {
-  const wm = wordmark(124, 30, 40, t);
-  return svgDoc(124 + wm.width, 100, icons[id].svg(t) + wm.svg);
+const lockup = (ic, inverse) => {
+  const wm = inverse
+    ? wordmark(124, 30, 40, C.white, C.white)
+    : wordmark(124, 30, 40, C.black, ic.light.accent);
+  return svgDoc(124 + wm.width, 100, ic.svg(inverse ? ic.inverse : ic.light) + wm.svg);
 };
 const write = (name, svg) => fs.writeFileSync(path.join(OUT, name), svg);
 const sized = (svg, h) => svg.replace('<svg ', `<svg style="height:${h}px" `);
 
 let rows = '';
 Object.entries(icons).forEach(([id, ic], i) => {
-  const light = svgDoc(100, 100, ic.svg(LIGHT));
-  const inverse = svgDoc(100, 100, ic.svg(INVERSE));
+  const light = svgDoc(100, 100, ic.svg(ic.light));
+  const inverse = svgDoc(100, 100, ic.svg(ic.inverse));
   write(`${i + 1}-${id}.svg`, light);
   write(`${i + 1}-${id}-inverse.svg`, inverse);
-  write(`${i + 1}-${id}-lockup.svg`, lockup(id, LIGHT));
+  write(`${i + 1}-${id}-lockup.svg`, lockup(ic, false));
   rows += `<h2>${i + 1}. ${ic.title}</h2><div class=row>
 <div class=cell>${sized(light, 140)}</div>
 <div class="cell sizes">${sized(light, 64)}${sized(light, 32)}${sized(light, 16)}</div>
 <div class="cell blue">${sized(inverse, 64)}${sized(inverse, 32)}</div>
-<div class="cell wide">${sized(lockup(id, LIGHT), 60)}</div>
-<div class="cell wide blue">${sized(lockup(id, INVERSE), 60)}</div></div>`;
+<div class="cell wide">${sized(lockup(ic, false), 60)}</div>
+<div class="cell wide blue">${sized(lockup(ic, true), 60)}</div></div>`;
 });
-const wm = wordmark(0, 0, 40, LIGHT);
+const wm = wordmark(0, 0, 40, C.black, C.blue);
 write('wordmark-b.svg', svgDoc(wm.width, 40, wm.svg));
 write(
   'preview.html',
