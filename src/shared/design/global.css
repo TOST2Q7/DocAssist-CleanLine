@@ -6,7 +6,7 @@
 
 body {
   margin: 0;
-  font-family: var(--font-sans);
+  font-family: var(--font-ui);
   font-size: var(--text-md);
   line-height: var(--leading-body);
   color: var(--color-text);

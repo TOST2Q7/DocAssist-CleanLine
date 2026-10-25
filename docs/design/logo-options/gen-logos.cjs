@@ -1,6 +1,7 @@
 // Generates DocAssist logo options: icons, wordmarks (text outlined), lockups + preview.html.
-// Deps are not in the app: run from a temp dir with `npm i opentype.js @fontsource/montserrat`,
-// then `node gen-logos.cjs <outDir>`; preview.png = Playwright screenshot of preview.html.
+// Deps are not in the app. In a temp dir: `npm i opentype.js @fontsource/unbounded`, then
+// `NODE_PATH=$PWD/node_modules node <this file> <outDir>`; preview.png = screenshot of preview.html.
+// Wordmark font: Unbounded (OFL), free stand-in for the brand's Actay Wide (commercial).
 const fs = require('fs');
 const path = require('path');
 const opentype = require('opentype.js');
@@ -8,18 +9,16 @@ const opentype = require('opentype.js');
 const OUT = process.argv[2];
 fs.mkdirSync(OUT, { recursive: true });
 
-const C = { blue: '#1A05FF', black: '#000000', white: '#FFFFFF', gray: '#E6E6E6' };
+const C = { blue: '#0804FF', black: '#000000', white: '#FFFFFF', gray: '#EEEEEE' };
 const ELL_ANGLE = 42; // brand ellipse tilt, measured from the РСО logo
 const ELL_RATIO = 1.8;
 
-const load = (f) =>
-  opentype.parse(
-    fs.readFileSync(path.join(__dirname, 'node_modules/@fontsource/montserrat/files', f)).buffer,
-  );
-const F = {
-  bold: load('montserrat-latin-800-normal.woff'),
-  italic: load('montserrat-latin-800-italic.woff'),
-};
+const F = opentype.parse(
+  fs.readFileSync('node_modules/@fontsource/unbounded/files/unbounded-latin-600-normal.woff')
+    .buffer,
+);
+const CAP = F.tables.os2.sCapHeight / F.unitsPerEm;
+const SLANT = -12; // deg, like "КРУТ" in the РСО logo
 
 // ---------- primitives (viewBox 0 0 100 100) ----------
 const ellipse = (cx, cy, rx, fill, angle = ELL_ANGLE, ratio = ELL_RATIO) =>
@@ -127,6 +126,21 @@ const icons = {
       rect(50, 50, 50, 50, C.black) +
       petals(75, 75, 9, C.white),
   },
+  'v6-district': {
+    title: 'В системе логотипов округов РСО',
+    svg: () => {
+      // Crescent = brand ellipse minus the same ellipse shifted up-right (like the district swoosh).
+      const t = textPath(F, 'DA', 0, 0, 10, 0);
+      const k = 36 / t.end; // fit text width
+      const txt = textPath(F, 'DA', 55 - 18, 46 + (CAP * 10 * k) / 2, 10 * k, 0);
+      return (
+        `<mask id="v6m"><rect width="100" height="100" fill="#fff"/>` +
+        `${ellipse(55, 45, 50, '#000')}</mask>` +
+        `<g mask="url(#v6m)">${ellipse(50, 50, 50, C.blue)}</g>` +
+        `<path d="${txt.d}" fill="${C.blue}"/>`
+      );
+    },
+  },
 };
 
 // ---------- wordmarks ----------
@@ -157,18 +171,21 @@ function textPath(font, text, x, baseline, size, tracking) {
 
 // Returns {svg, width} for a wordmark with cap height `cap`, top at y.
 function wordmark(style, x, y, cap, colors) {
-  const size = cap / 0.7;
+  const size = cap / CAP;
   const base = y + cap;
   if (style === 'a') {
-    const t = textPath(F.bold, 'DOCASSIST', x, base, size, 0.02);
+    const t = textPath(F, 'DOCASSIST', x, base, size, 0.01);
     return { svg: `<path d="${t.d}" fill="${colors.text}"/>`, width: t.end - x };
   }
-  // style b: "DOC" upright + "ASSIST" italic in accent (echo of ТРУД/КРУТ)
-  const a = textPath(F.bold, 'DOC', x, base, size, 0.02);
-  const b = textPath(F.italic, 'ASSIST', a.end + 0.08 * size, base, size, 0.02);
+  // style b: "DOC" upright + "ASSIST" slanted in accent (echo of ТРУД/КРУТ)
+  const a = textPath(F, 'DOC', x, base, size, 0.01);
+  const b = textPath(F, 'ASSIST', a.end + 0.06 * size, base, size, 0.01);
+  const shift = Math.tan((-SLANT * Math.PI) / 180) * cap; // slant leans right by this at cap top
   return {
-    svg: `<path d="${a.d}" fill="${colors.text}"/><path d="${b.d}" fill="${colors.accent}"/>`,
-    width: b.end - x,
+    svg:
+      `<path d="${a.d}" fill="${colors.text}"/>` +
+      `<path d="${b.d}" fill="${colors.accent}" transform="translate(0 ${base}) skewX(${SLANT}) translate(0 ${-base})"/>`,
+    width: b.end - x + shift,
   };
 }
 
@@ -206,7 +223,7 @@ write(
   `<!doctype html><meta charset=utf-8><style>
 body{margin:0;padding:24px;font-family:sans-serif;width:1500px}h2{font-size:20px;margin:18px 0 8px}
 .row{display:flex;gap:12px}.cell{display:flex;align-items:center;justify-content:center;padding:16px;border:1px solid #ddd}
-.gray{background:#E6E6E6}.black{background:#000}.sizes{gap:18px;width:200px}.wide{flex:1}
+.gray{background:#EEEEEE}.black{background:#000}.sizes{gap:18px;width:200px}.wide{flex:1}
 </style>${rows}</div>`,
 );
 console.log('ok', Object.keys(icons).join(' '));

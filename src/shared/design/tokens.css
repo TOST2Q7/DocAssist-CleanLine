@@ -1,45 +1,43 @@
 /*
  * Design tokens: the only source of colors, fonts, sizes, spacing, radii.
- * Brand: РСО 2025 identity (docs/design/brand.md). "derived" = not in the brand, picked for UI needs.
+ * Brand: РСО brandbook 2025 (docs/design/brand.md). "derived" = not in the brand, picked for UI needs.
  */
 :root {
-  /* Brand palette */
-  --brand-blue: #1a05ff;
-  --brand-black: #000000;
+  /* Brand palette (brandbook RGB). Direction colors exist but aren't received yet. */
+  --brand-blue: #0804ff; /* 8 4 255 */
   --brand-white: #ffffff;
-  --brand-gray: #e6e6e6;
-  --brand-yellow: #f6eb19; /* accent: only on black/graphite */
-  --brand-red: #e10812; /* accent: text only on white */
-  --brand-graphite: #222222;
+  --brand-gray: #eeeeee; /* 238 238 238 */
+  --brand-black: #000000;
 
   /* Semantic */
-  --color-bg: var(--brand-gray);
-  --color-surface: var(--brand-white);
+  --color-bg: var(--brand-white);
+  --color-surface: var(--brand-gray);
   --color-text: var(--brand-black);
-  --color-text-muted: #5c5c5c; /* derived */
-  --color-border: #c4c4c4; /* derived */
+  --color-text-muted: #595959; /* derived */
+  --color-border: #c8c8c8; /* derived */
   --color-primary: var(--brand-blue);
-  --color-on-primary: var(--brand-white); /* never black on blue (2.5:1) */
+  --color-on-primary: var(--brand-white); /* never black on blue (2.4:1) */
   --color-inverse: var(--brand-black);
   --color-on-inverse: var(--brand-white);
-  --color-danger: var(--brand-red);
-  --color-highlight: var(--brand-yellow);
+  --color-danger: #e10812; /* derived, functional only (errors); not a brand color */
 
-  /* Type */
-  --font-sans: 'Montserrat', system-ui, sans-serif;
+  /* Type: brand hierarchy with free stand-ins (see fonts.css) */
+  --font-display: 'Unbounded', 'Montserrat', sans-serif; /* = Actay Wide Bold: main titles only */
+  --font-ui: 'Montserrat', system-ui, sans-serif; /* = Stolzl: headings, UI text, numbers (light) */
+  --font-text: 'Onest', system-ui, sans-serif; /* = Onest: long body text */
   --font-mono: ui-monospace, Menlo, Consolas, monospace;
+  --weight-light: 300; /* numbers */
   --weight-regular: 400;
   --weight-medium: 500;
   --weight-bold: 700;
-  --weight-display: 800; /* uppercase headings, brand style */
+  --weight-display: 600; /* Unbounded 600 ≈ Actay Wide Bold */
   --text-sm: 0.875rem;
   --text-md: 1rem;
   --text-lg: 1.25rem;
   --text-xl: 1.75rem;
   --text-2xl: 2.5rem;
-  --leading-tight: 1.05; /* display */
+  --leading-tight: 1.05; /* titles, uppercase headings */
   --leading-body: 1.5;
-  --tracking-display: 0.02em;
 
   /* Spacing */
   --space-1: 4px;
@@ -49,9 +47,10 @@
   --space-6: 24px;
   --space-8: 32px;
 
-  /* Shape: brand uses sharp tiles + ellipses */
+  /* Shape: square/rect tiles + ovals */
   --radius-none: 0;
   --radius-pill: 999px;
+  --line-thin: 1px; /* decorative oval outlines */
   --ellipse-angle: 42deg;
   --ellipse-ratio: 1.8;
 }
