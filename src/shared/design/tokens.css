@@ -1,9 +1,9 @@
 /*
  * Design tokens: the only source of colors, fonts, sizes, spacing, radii.
- * Brand: РСО brandbook 2025 (docs/design/brand.md). "derived" = not in the brand, picked for UI needs.
+ * Brand: РСО brandbook 2026 v2.1 (docs/design/brand.md). "derived" = not in the brand, picked for UI needs.
  */
 :root {
-  /* Brand palette (brandbook RGB). Direction colors exist but aren't received yet. */
+  /* Brand palette (digital). Direction palettes: directions.ts, only for that direction's content. */
   --brand-blue: #0804ff; /* 8 4 255 */
   --brand-white: #ffffff;
   --brand-gray: #eeeeee; /* 238 238 238 */
@@ -31,13 +31,18 @@
   --weight-medium: 500;
   --weight-bold: 700;
   --weight-display: 600; /* Unbounded 600 ≈ Actay Wide Bold */
-  --text-sm: 0.875rem;
-  --text-md: 1rem;
-  --text-lg: 1.25rem;
-  --text-xl: 1.75rem;
-  --text-2xl: 2.5rem;
-  --leading-tight: 1.05; /* titles, uppercase headings */
-  --leading-body: 1.5;
+  /* Brand scale: each level ×1.618 from base text; xs/sm are derived UI floors. */
+  --text-xs: 0.75rem; /* 12 caption */
+  --text-sm: 0.875rem; /* 14 labels, derived */
+  --text-md: 1rem; /* 16 text */
+  --text-lg: 1.625rem; /* 26 subheading */
+  --text-xl: 2.625rem; /* 42 heading */
+  --text-2xl: 4.25rem; /* 68 title */
+  /* Bigger text → tighter leading. Tracking is always 0 (brand rule). */
+  --leading-title: 1.1;
+  --leading-heading: 1.15;
+  --leading-body: 1.4;
+  --measure: 60ch; /* long text line length: 40–60 chars */
 
   /* Spacing */
   --space-1: 4px;
