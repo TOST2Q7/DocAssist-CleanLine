@@ -1,0 +1,32 @@
+/*
+ * Design tokens: the only source of colors, fonts, sizes, spacing, radii.
+ * PLACEHOLDER values until the approved design doc arrives.
+ */
+:root {
+  --color-bg: #ffffff;
+  --color-surface: #f5f6f8;
+  --color-text: #1b1d21;
+  --color-text-muted: #5f6672;
+  --color-primary: #2f6fed;
+  --color-on-primary: #ffffff;
+  --color-border: #dde1e7;
+  --color-danger: #d93025;
+
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, Menlo, Consolas, monospace;
+
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.75rem;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+}
