@@ -1,3 +1,4 @@
+import logoUrl from '@/shared/design/logo.svg';
 import { APP_VERSION, SOURCE_URL } from '@/shared/env';
 import { IconLink } from '@/shared/ui/icons';
 import styles from './App.module.css';
@@ -6,7 +7,7 @@ export function App() {
   return (
     <div className={styles.shell}>
       <header className={styles.header}>
-        <span className={styles.brand}>DocAssist</span>
+        <img className={styles.logo} src={logoUrl} alt="DocAssist" />
       </header>
       <main className={styles.main}>
         <p>Каркас приложения. Модули подключаются здесь.</p>

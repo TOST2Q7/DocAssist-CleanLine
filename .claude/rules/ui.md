@@ -13,6 +13,6 @@ paths:
 - Never add Stolzl/Actay files (commercial; public repo). Fonts bundled, cyrillic+latin, no italics.
 - Look: flat fills, no shadows/gradients. Equal square/rect tiles; roundness only as ovals/pills. Thin blue oval outlines allowed as decoration.
 - Icons: Solar set only, via `@/shared/ui/icons` (add missing ones there). Linear = default, Bold = active/selected; size 1em via font-size, color = currentColor; decorative → `aria-hidden`. Direction icons: vectors in the brandbook PDF (extract on demand).
-- Logo: app's own. Wordmark B chosen (`docs/design/logo-options/wordmark-b.svg`: DOC upright + ASSIST slanted, Unbounded). Icon: round 3 = user's hammer+wrench badge reworked, not chosen yet. Never use or alter the РСО logo.
+- Logo (final): hammer+wrench badge + wordmark B; sources in `docs/design/logo/` (regenerate via gen-logo.cjs, don't hand-edit). App uses `src/shared/design/logo.svg` + inline favicon in index.html. Never use or alter the РСО logo.
 - Styles: CSS Modules (`X.module.css` beside `X.tsx`). Global CSS only in `src/shared/design/`.
 - Generic UI components live in `src/shared/ui/`; reuse before writing new ones.
