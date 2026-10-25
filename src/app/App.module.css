@@ -23,6 +23,12 @@
   padding: var(--space-6);
 }
 
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
 .footer {
   display: flex;
   gap: var(--space-4);

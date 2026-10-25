@@ -19,7 +19,8 @@
   --color-on-primary: var(--brand-white); /* never black on blue (2.4:1) */
   --color-inverse: var(--brand-black);
   --color-on-inverse: var(--brand-white);
-  --color-danger: #e10812; /* derived, functional only (errors); not a brand color */
+  --color-danger: #ee2e2e; /* errors: fills, icons, borders (brandbook icon library red) */
+  --color-danger-text: #d71212; /* derived: same hue, small text (≥4.5:1 on white and gray) */
 
   /* Type: brand hierarchy with free stand-ins (see fonts.css) */
   --font-display: 'Unbounded', 'Montserrat', sans-serif; /* = Actay Wide Bold: main titles only */

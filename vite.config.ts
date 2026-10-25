@@ -1,6 +1,7 @@
 /// <reference types="vitest/config" />
 import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
+import Icons from 'unplugin-icons/vite';
 import { defineConfig, type Plugin } from 'vite';
 import { viteSingleFile } from 'vite-plugin-singlefile';
 import pkg from './package.json' with { type: 'json' };
@@ -15,6 +16,8 @@ export default defineConfig(({ mode }) => {
     resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
     plugins: [
       react(),
+      // Solar icons (`~icons/solar/*`) compiled to React components at build time: offline, tree-shaken.
+      Icons({ compiler: 'jsx', jsx: 'react', scale: 1 }),
       ...(isFile ? [viteSingleFile(), renameHtml(`docassist-cleanline-v${pkg.version}.html`)] : []),
     ],
     build: { outDir: isFile ? 'dist-file' : 'dist' },

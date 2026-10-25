@@ -32,6 +32,11 @@ Settings → Pages → Build and deployment → Source: **GitHub Actions**.
 - `src/shared/` — общее без бизнес-логики: дизайн-токены, UI-кит, утилиты.
 - `CLAUDE.md` в корне и в модулях — инструкции для Claude (короткие, на английском).
 
+## Сторонние материалы
+
+- Иконки: [Solar Icon Set](https://github.com/480-Design/Solar-Icon-Set) от 480 Design, лицензия [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+- Шрифты: Montserrat, Onest, Unbounded — SIL Open Font License.
+
 ## Как работать с Claude
 
 - В начале сессии называй область: «Модуль crypto: добавить …». Тогда Claude читает только её.
