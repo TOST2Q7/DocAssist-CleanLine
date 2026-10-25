@@ -1,25 +1,47 @@
 /*
  * Design tokens: the only source of colors, fonts, sizes, spacing, radii.
- * PLACEHOLDER values until the approved design doc arrives.
+ * Brand: РСО 2025 identity (docs/design/brand.md). "derived" = not in the brand, picked for UI needs.
  */
 :root {
-  --color-bg: #ffffff;
-  --color-surface: #f5f6f8;
-  --color-text: #1b1d21;
-  --color-text-muted: #5f6672;
-  --color-primary: #2f6fed;
-  --color-on-primary: #ffffff;
-  --color-border: #dde1e7;
-  --color-danger: #d93025;
+  /* Brand palette */
+  --brand-blue: #1a05ff;
+  --brand-black: #000000;
+  --brand-white: #ffffff;
+  --brand-gray: #e6e6e6;
+  --brand-yellow: #f6eb19; /* accent: only on black/graphite */
+  --brand-red: #e10812; /* accent: text only on white */
+  --brand-graphite: #222222;
 
-  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Semantic */
+  --color-bg: var(--brand-gray);
+  --color-surface: var(--brand-white);
+  --color-text: var(--brand-black);
+  --color-text-muted: #5c5c5c; /* derived */
+  --color-border: #c4c4c4; /* derived */
+  --color-primary: var(--brand-blue);
+  --color-on-primary: var(--brand-white); /* never black on blue (2.5:1) */
+  --color-inverse: var(--brand-black);
+  --color-on-inverse: var(--brand-white);
+  --color-danger: var(--brand-red);
+  --color-highlight: var(--brand-yellow);
+
+  /* Type */
+  --font-sans: 'Montserrat', system-ui, sans-serif;
   --font-mono: ui-monospace, Menlo, Consolas, monospace;
-
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+  --weight-display: 800; /* uppercase headings, brand style */
   --text-sm: 0.875rem;
   --text-md: 1rem;
   --text-lg: 1.25rem;
   --text-xl: 1.75rem;
+  --text-2xl: 2.5rem;
+  --leading-tight: 1.05; /* display */
+  --leading-body: 1.5;
+  --tracking-display: 0.02em;
 
+  /* Spacing */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -27,6 +49,9 @@
   --space-6: 24px;
   --space-8: 32px;
 
-  --radius-sm: 4px;
-  --radius-md: 8px;
+  /* Shape: brand uses sharp tiles + ellipses */
+  --radius-none: 0;
+  --radius-pill: 999px;
+  --ellipse-angle: 42deg;
+  --ellipse-ratio: 1.8;
 }

@@ -14,7 +14,9 @@
 
 .brand {
   font-size: var(--text-lg);
-  font-weight: 600;
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
 }
 
 .main {
