@@ -13,6 +13,6 @@ paths:
 - Never add Stolzl/Actay files (commercial; public repo). Fonts bundled, cyrillic+latin, no italics.
 - Look: flat fills, no shadows/gradients. Equal square/rect tiles; roundness only as ovals/pills. Thin blue oval outlines allowed as decoration.
 - Icons: Solar set only, via `@/shared/ui/icons` (add missing ones there). Linear = default, Bold = active/selected; size 1em via font-size, color = currentColor; decorative → `aria-hidden`. Direction icons: vectors in the brandbook PDF (extract on demand).
-- Logo: app's own; options in `docs/design/logo-options/`, not chosen yet. Never use or alter the РСО logo.
+- Logo: app's own. Wordmark B chosen (`docs/design/logo-options/wordmark-b.svg`: DOC upright + ASSIST slanted, Unbounded); icon not chosen (round 2 options there). Never use or alter the РСО logo.
 - Styles: CSS Modules (`X.module.css` beside `X.tsx`). Global CSS only in `src/shared/design/`.
 - Generic UI components live in `src/shared/ui/`; reuse before writing new ones.
