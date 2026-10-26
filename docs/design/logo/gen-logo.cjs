@@ -1,6 +1,6 @@
 // Generates the DocAssist logo (chosen: stacked ovals, wordmark B) into <outDir>:
-// icon.svg, icon-inverse.svg, lockup.svg, lockup-inverse.svg, wordmark.svg, wordmark-inverse.svg,
-// favicon.txt (data URI, adapts to dark browser UI), preview.html.
+// icon[-dark|-inverse|-black].svg, lockup[-inverse|-black].svg, wordmark[-inverse].svg,
+// favicon.txt (data URI, adapts to dark browser UI), preview.html. PNG exports: export-png.cjs.
 // Deps are not in the app. In a temp dir: `npm i opentype.js @fontsource/unbounded`, then from that dir
 // `NODE_PATH=$PWD/node_modules node <this file> <outDir>`.
 // Wordmark font: Unbounded (OFL), free stand-in for the brand's Actay Wide (commercial).
@@ -67,8 +67,10 @@ function stack(colors, id, classes = ['', '', '']) {
   }).join('');
   return `<defs>${masks}</defs><g transform="translate(50 50) scale(${n(K)}) translate(-50 -50)">${shapes}</g>`;
 }
-const LIGHT = [C.black, C.black, C.blue];
-const INVERSE = [C.white, C.white, C.white];
+const LIGHT = [C.black, C.black, C.blue]; // color, for light backgrounds
+const DARK = [C.white, C.white, C.blue]; // color, for dark backgrounds
+const INVERSE = [C.white, C.white, C.white]; // white mono
+const BLACK = [C.black, C.black, C.black]; // black mono
 
 // ---------- wordmark B ----------
 // opentype.js toPathData() packs numbers ambiguously ("L4 0" -> "L40"); serialize ourselves.
@@ -117,12 +119,18 @@ const lock = (colors, text, accent, id) => {
 
 const icon = svgDoc(100, 100, stack(LIGHT, 'a'));
 const iconInverse = svgDoc(100, 100, stack(INVERSE, 'a'));
+const iconDark = svgDoc(100, 100, stack(DARK, 'a'));
+const iconBlack = svgDoc(100, 100, stack(BLACK, 'a'));
+const lockupBlack = lock(BLACK, C.black, C.black, 'a');
 const lockup = lock(LIGHT, C.black, C.blue, 'a');
 const lockupInverse = lock(INVERSE, C.white, C.white, 'a');
 const wmLight = wordmark(0, 0, 40, C.black, C.blue);
 const wmDark = wordmark(0, 0, 40, C.white, C.white);
 write('icon.svg', icon);
 write('icon-inverse.svg', iconInverse);
+write('icon-dark.svg', iconDark);
+write('icon-black.svg', iconBlack);
+write('lockup-black.svg', lockupBlack);
 write('lockup.svg', lockup);
 write('lockup-inverse.svg', lockupInverse);
 write('wordmark.svg', svgDoc(wmLight.width, 40, wmLight.svg));
