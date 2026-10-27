@@ -34,6 +34,12 @@ Stack: Vite 8, React 19, TS strict, CSS Modules + CSS-var tokens, Vitest, oxlint
 - End of task: update area CLAUDE.md + Modules map if purpose/contract/decision/state changed. Remove stale lines. CLAUDE.md = why/invariants/gotchas/state, never a retelling of code.
 - New module → skill `new-module`.
 
+## Git & branches
+
+- `claude-development`: default working branch (work + tests with Claude). Commit and push here; never create new branches unless asked. If the session was assigned another branch (e.g. `claude/*`), still work in `claude-development`.
+- `testers-prerelease`: pre-release builds for testers. `main`: releases + Pages. Push/merge into `testers-prerelease` or `main` only with the user's explicit OK.
+- Commit author: `git config user.name "Tost"` + `git config user.email "113260893+TOST2Q7@users.noreply.github.com"` before the first commit of a session. Only goal: commits count in the user's GitHub contribution graph. Trailers (Co-Authored-By etc.) don't matter.
+
 ## Conventions
 
 - Code, comments, CLAUDE.md, commits: English, terse. UI text: Russian. Talk to user: Russian.
