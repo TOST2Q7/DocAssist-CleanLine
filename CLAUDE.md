@@ -33,6 +33,7 @@ Stack: Vite 8, React 19, TS strict, CSS Modules + CSS-var tokens, Vitest, oxlint
 - No repo-wide exploration "for context"; narrow Grep/Glob paths.
 - End of task: update area CLAUDE.md + Modules map if purpose/contract/decision/state changed. Remove stale lines. CLAUDE.md = why/invariants/gotchas/state, never a retelling of code.
 - New module → skill `new-module`.
+- A rule here blocks the task (limit, boundary, convention) → don't work around it silently. Tell user: which rule, why it blocks, options (relax / drop / keep and adapt). Edit CLAUDE.md only after OK.
 
 ## Git & branches
 
@@ -43,7 +44,7 @@ Stack: Vite 8, React 19, TS strict, CSS Modules + CSS-var tokens, Vitest, oxlint
 ## Conventions
 
 - Code, comments, CLAUDE.md, commits: English, terse. UI text: Russian. Talk to user: Russian.
-- Files ≲250 lines; split by responsibility.
+- Files ≲250 lines: soft limit, signal to split by responsibility. Exceed only when splitting hurts cohesion (one state machine, one data table); then warn user with the reason and put `// size: <reason>` at file top. Never grow past it silently.
 - Tests: `*.test.ts(x)` beside code; test a module through its `index.ts`. DOM-free by default (node env).
 - Routing (when added): hash-based (base `./` must work on Pages subpath and file://).
 - Single-file build must work offline: bundle fonts/icons/assets, no CDN.
