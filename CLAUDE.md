@@ -41,6 +41,15 @@ Stack: Vite 8, React 19, TS strict, CSS Modules + CSS-var tokens, Vitest, oxlint
 - `testers-prerelease`: pre-release builds for testers. `main`: releases + Pages. Push/merge into `testers-prerelease` or `main` only with the user's explicit OK.
 - Commit author: `git config user.name "Tost"` + `git config user.email "113260893+TOST2Q7@users.noreply.github.com"` before the first commit of a session. Only goal: commits count in the user's GitHub contribution graph. Trailers (Co-Authored-By etc.) don't matter.
 
+## Sensitive data (app handles confidential docs)
+
+- Anything the user pastes/attaches/points to (docs, screenshots, sample text) = real personal data by default, even if called "example". Use it only to understand structure/format in this turn.
+- Never let its values leave the chat: no names, phones, emails, addresses, passport/SNILS/INN/account numbers, dates of birth, signatures, company details in code, tests, fixtures, comments, logs, commits, PR/issue text, CLAUDE.md, artifacts, file names.
+- Need example data → invent it, obviously fake: `Тестов Тест Тестович`, `+7 000 000-00-00`, `user@example.com`, IDs of zeros or failing checksums. Copy the shape, never a value (no "slightly changed" real data).
+- Real samples for local dev live in `private/` (gitignored). Read on request only; never copy from it into tracked files.
+- Before commit: re-read the diff for anything from user-provided data. Unsure → ask, don't commit.
+- Leak found in tracked files/history → stop, tell user at once. A new commit doesn't remove it from history/remote; cleanup (history rewrite, force-push) only with user's OK.
+
 ## Conventions
 
 - Code, comments, CLAUDE.md, commits: English, terse. UI text: Russian. Talk to user: Russian.

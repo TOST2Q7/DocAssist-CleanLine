@@ -2,6 +2,7 @@ node_modules
 dist
 dist-file
 *.local
+private/
 *.log
 .DS_Store
 .idea
