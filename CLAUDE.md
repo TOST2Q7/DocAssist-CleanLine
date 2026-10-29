@@ -25,6 +25,7 @@ Stack: Vite 8, React 19, TS strict, CSS Modules + CSS-var tokens, Vitest, oxlint
 - `src/shared/` domain-free code used by ≥2 areas (design tokens, ui kit, utils, env).
 - Allowed: app → modules (index), shared. module → shared, other module (index). shared → shared. No cycles.
 - Alias `@/` = `src/` for cross-area imports; relative imports only inside an area.
+- All persistence (read/save/sync, any storage) only via `@/modules/data`. Other modules never touch localStorage/IndexedDB/Drive files directly (oxlint `no-restricted-globals` guards the first two). Need a new kind of data → extend data's index.ts.
 
 ## Session protocol (token economy)
 
@@ -60,4 +61,4 @@ Stack: Vite 8, React 19, TS strict, CSS Modules + CSS-var tokens, Vitest, oxlint
 
 ## Modules map
 
-(none yet)
+- data: single gateway to persisted data (address tree, ranked phrases, encrypted per-person records); crypto/storage via ports.

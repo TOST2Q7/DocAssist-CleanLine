@@ -3,6 +3,18 @@
   "plugins": ["react", "typescript", "oxc"],
   "rules": {
     "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
+    "react/only-export-components": ["warn", { "allowConstantExport": true }],
+    "no-restricted-globals": [
+      "error",
+      { "name": "localStorage", "message": "Persist via @/modules/data." },
+      { "name": "sessionStorage", "message": "Persist via @/modules/data." },
+      { "name": "indexedDB", "message": "Persist via @/modules/data." }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/modules/data/**"],
+      "rules": { "no-restricted-globals": "off" }
+    }
+  ]
 }
