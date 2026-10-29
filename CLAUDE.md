@@ -57,8 +57,9 @@ Stack: Vite 8, React 19, TS strict, CSS Modules + CSS-var tokens, Vitest, oxlint
 
 ## Clips («Прищепки»)
 
-- The app = a shell hosting clips: independent mini-apps, each a separate line of work. Planned: table check, documents from templates, personal files (scans + per-person data). Code name `clip`, UI name «Прищепка».
-- Each clip: own folder, screens, texts, settings and version in `manifest.ts` (id, title, version, what it syncs). App discovers manifests itself; new clip = new folder. Site version = package.json.
+- «Прищепка» = user-facing name for a sub-app; code name `clip`. Home screen = buttons, one per clip («Проверка таблицы», «Генерация документов», …); a button opens that clip's screens.
+- Planned clips: table check (fields of a Google Sheet), documents from templates, personal files (scans + per-person data).
+- Code of each clip is kept apart so clips stay independent: own folder, screens, texts, settings and version in `manifest.ts` (id, title, version, what it syncs). App discovers manifests itself; new clip = new folder. Site version = package.json.
 - Clips never import or read each other. They talk only through a typed, versioned message protocol owned by core («agreed language», not ad-hoc calls into each other). Needed by 2+ clips → move it into core.
 - Shared data only via core (`@/modules/data`): people records, trees, ranked phrases, field catalog. A clip keeps its per-person data in its own namespaced section of the person record (`<clip>.…`), never a side file. Shared formats are read by every clip: change them carefully.
 
