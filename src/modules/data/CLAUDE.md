@@ -6,7 +6,7 @@ Uses: nothing (shared only). Crypto and storage come in as ports (`Cipher`, `Sto
 Contract notes:
 
 - `createDataService({ backend, cipher })` once in app; feature modules receive `DataService` (or one store), never a backend.
-- Every stored doc = JSON `{ schema, data }`; owner bumps `schema` on any format change, `parse` migrates old ones.
+- Every stored doc = JSON `{ schema, data }`. Bump `schema` + add a migration in `parse` only when the old format shipped in `main`; unreleased formats are just replaced.
 - `phrases.confirm` only after the user confirmed values. Field ids namespaced by owner module (`person.lastName`).
 - `RecordDoc.name` prefixed by owner module (`person.profile`); T must be JSON-serializable.
 - All failures are `DataError` with `code`; branch on code (`no_cipher` → ask to unlock, etc.).
