@@ -81,6 +81,7 @@ Stack: Vite 8, React 19, TS strict, CSS Modules + CSS-var tokens, Vitest, oxlint
 
 ## Planned foundations
 
+- Color sets: user switches theme light/dark × palette «Стандарт» (brandbook) / «Не по ГОСТ'у» (old DocAssist colors) = 4 sets of the same `--color-*` tokens; colors only. Spec: `docs/design/palettes.md`; rules: `.claude/rules/ui.md`. Choice = personal setting via data.
 - Floating windows: draggable, stay in viewport, raise on focus, several at once; opened by any clip via app's window host. First user: scan viewer with zoom/pan, opened on a chosen file or auto-picked by the field being filled (name/passport fields → passport scan). Field → document kind mapping belongs to the field catalog; clips ask for a document via the protocol, not by reading the personal-files clip.
 
 ## Sensitive data (app handles confidential docs)

@@ -6,8 +6,12 @@ paths:
 # UI rules (brand: РСО brandbook 2026 v2.1; human summary in docs/design/brand.md)
 
 - Colors, fonts, sizes, spacing, radii: only `var(--…)` from `src/shared/design/tokens.css`. Missing token → add it there, never hardcode.
-- Palette = blue/white/gray/black. Direction palettes (`src/shared/design/directions.ts`) only for that direction's content. Errors: `--color-danger` (fills/icons/borders), `--color-danger-text` (small text).
-- Contrast: on blue → white text only (black is 2.5:1).
+- Color sets: 2 user switches = 4 sets: theme light/dark × palette «Стандарт» (brandbook) / «Не по ГОСТ'у» (old DocAssist colors). Values + open questions: `docs/design/palettes.md` (until moved into tokens.css). Components use only semantic `--color-*` tokens, never raw palette values or per-set branches; new role → add it to all 4 sets.
+- Switches change colors only: fonts, shapes, flat look, layout are the same in every set.
+- «Стандарт»: brandbook blue/white/gray/black (+ derived UI tints, marked). Direction palettes (`src/shared/design/directions.ts`) only for that direction's content. On blue → white text only (black is 2.5:1). Dark: blue on black is 2.5:1 → blue only as a fill; blue text/links/icons/thin lines → `--color-primary-text`.
+- «Не по ГОСТ'у»: own colors; brandbook color limits don't apply.
+- Every set: text ≥ 4.5:1, icons and meaningful UI graphics ≥ 3:1 on bg and surface (decorative borders exempt). Errors: `--color-danger` (fills/icons/borders), `--color-danger-text` (small text).
+- Built-in colors (logo, favicon, illustrations) → a variant per set.
 - Fonts: `--font-display` = main titles only, ≤4 words, uppercase; `--font-ui` = headings (≤5 lines) + UI text, light weight only for numbers; `--font-text` = long text. Max 2 families per screen: display+ui or ui+text.
 - Type: sizes only from the ×1.618 scale tokens; leading tokens by size; letter-spacing always 0; left-aligned, never justified; long text max-width `--measure`.
 - Never add Stolzl/Actay files (commercial; public repo). Fonts bundled, cyrillic+latin, no italics.
