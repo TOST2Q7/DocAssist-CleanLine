@@ -12,6 +12,14 @@ Planned: Google sign-in (GIS token model, browser-only) + Google Drive (prefer s
 OAuth can't work from file:// → Google features off when `IS_FILE_BUILD` (`@/shared/env`).
 Stack: Vite 8, React 19, TS strict, CSS Modules + CSS-var tokens, Vitest, oxlint, Prettier, dependency-cruiser. npm, Node 22.
 
+## Product
+
+- Users: «мастера» of student brigades (РСО): the layer between «бойцы» (people in a squad, sometimes other squads) and the regional HQ, which gets clean data + squad reports of several kinds.
+- Job: automate their routine: fast checks of table data, documents from templates, structured document work (app shows what goes where, e.g. on Google Drive, and sometimes files/edits it itself).
+- Self-tuning: most functional parts get a manual-config window with Lua (table-check filters, extra actions on buttons, …).
+- Personal data everywhere (passports, scans, …): reliability and privacy are product features, not extras.
+- UI for an ordinary PC user: plain words, no jargon, pleasant and obvious. Advanced tools (Lua) are tucked aside, invisible in normal use, but ergonomic for real editing.
+
 ## Commands
 
 - `npm run check` = tsc + oxlint + depcruise + prettier + vitest. Must pass before commit. `npm run format` fixes style.
@@ -23,17 +31,20 @@ Stack: Vite 8, React 19, TS strict, CSS Modules + CSS-var tokens, Vitest, oxlint
 - `src/app/` shell: entry, layout, routing, wiring modules together. Composition only, no domain logic.
 - `src/modules/<m>/` one feature area with its own CLAUDE.md. Public API = `index.ts` only.
 - `src/shared/` domain-free code used by ≥2 areas (design tokens, ui kit, utils, env).
-- Allowed: app → modules (index), shared. module → shared, other module (index). shared → shared. No cycles.
+- `src/clips/<id>/` one «Прищепка» (planned; add depcruise rules with the first clip). See Clips.
+- Allowed: app → clips, modules (index), shared. clip → modules (index), shared; never another clip. module → shared, other module (index); never a clip. shared → shared. No cycles.
 - Alias `@/` = `src/` for cross-area imports; relative imports only inside an area.
 - All persistence (read/save/sync, any storage) only via `@/modules/data`. Other modules never touch localStorage/IndexedDB/Drive files directly (oxlint `no-restricted-globals` guards the first two). Need a new kind of data → extend data's index.ts.
 
 ## Session protocol (token economy)
 
-- 1 session = 1 area (a module | shared/x | app). Not named by user → infer from task. Task spans >1 area → first list areas + contract changes, get OK.
+- 1 session = 1 area (a clip | a module | shared/x | app); unclear which → ask. Not named by user → infer from task. Task spans >1 area → first list areas + contract changes, get OK.
 - Read only the area's files + the `index.ts` of modules it uses (types = contract). Never open other areas' internals; needing them = contract gap → extend that index.ts as a separate step.
 - No repo-wide exploration "for context"; narrow Grep/Glob paths.
 - End of task: update area CLAUDE.md + Modules map if purpose/contract/decision/state changed. Remove stale lines. CLAUDE.md = why/invariants/gotchas/state, never a retelling of code.
 - New module → skill `new-module`.
+- Changing a module's `index.ts` contract → grep its users in `src/clips` + `src/modules`, fix them, tell user which clips were affected.
+- Don't touch other clips "on the way": needed change there = separate explicit step, told to user first.
 - A rule here blocks the task (limit, boundary, convention) → don't work around it silently. Tell user: which rule, why it blocks, options (relax / drop / keep and adapt). Edit CLAUDE.md only after OK.
 
 ## Git & branches
@@ -43,6 +54,27 @@ Stack: Vite 8, React 19, TS strict, CSS Modules + CSS-var tokens, Vitest, oxlint
 - Compatibility is owed only to what shipped in `main` (released versions). Work in `claude-development` / `testers-prerelease` may break formats, APIs and stored data freely: no migrations or shims between unreleased states.
 - Workaround kept only for `main` compatibility → log it in `docs/workarounds.md` (template inside) + `// workaround: W-NNN` in code; delete the entry with the code. Grep it by area before touching code; don't read it whole. The file lives only in `claude-development`: drop it when merging into `testers-prerelease`/`main`, keep it when merging those back.
 - Commit author: `git config user.name "Tost"` + `git config user.email "113260893+TOST2Q7@users.noreply.github.com"` before the first commit of a session. Only goal: commits count in the user's GitHub contribution graph. Trailers (Co-Authored-By etc.) don't matter.
+
+## Clips («Прищепки»)
+
+- The app = a shell hosting clips: independent mini-apps, each a separate line of work. Planned: table check, documents from templates, personal files (scans + per-person data). Code name `clip`, UI name «Прищепка».
+- Each clip: own folder, screens, texts, settings and version in `manifest.ts` (id, title, version, what it syncs). App discovers manifests itself; new clip = new folder. Site version = package.json.
+- Clips never import or read each other. They talk only through a typed, versioned message protocol owned by core («agreed language», not ad-hoc calls into each other). Needed by 2+ clips → move it into core.
+- Shared data only via core (`@/modules/data`): people records, trees, ranked phrases, field catalog. A clip keeps its per-person data in its own namespaced section of the person record (`<clip>.…`), never a side file. Shared formats are read by every clip: change them carefully.
+
+## Core cells (each sensitive function isolated in one module)
+
+- data: all persistence (exists). People data lives only in per-person records.
+- google (planned): sign-in + every request to Google APIs. Nobody else fetches Google. Drive storage = a data `StorageBackend`.
+- crypto (planned): encryption. The scheme never leaks: not in file formats, UI texts or other modules.
+- security (planned): CSP + security checks.
+- conflicts (planned): multi-device edits: device labels, conflict detection in data, conflict dialog in UI.
+- settings sync (planned): personal settings on the user's own Drive; each clip declares in its manifest what syncs.
+- scripting (planned): Lua runtime for user tuning. Sandboxed: in a Worker with timeout, only an explicit API (no network/DOM/storage), offline-bundled (candidates: wasmoon, fengari).
+
+## Planned foundations
+
+- Floating windows: draggable, stay in viewport, raise on focus, several at once; opened by any clip via app's window host. First user: scan viewer with zoom/pan, opened on a chosen file or auto-picked by the field being filled (name/passport fields → passport scan). Field → document kind mapping belongs to the field catalog; clips ask for a document via the protocol, not by reading the personal-files clip.
 
 ## Sensitive data (app handles confidential docs)
 
@@ -64,3 +96,5 @@ Stack: Vite 8, React 19, TS strict, CSS Modules + CSS-var tokens, Vitest, oxlint
 ## Modules map
 
 - data: single gateway to persisted data (address tree, ranked phrases, encrypted per-person records); crypto/storage via ports.
+
+Clips: (none yet)
