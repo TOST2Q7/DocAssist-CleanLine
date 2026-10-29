@@ -12,6 +12,12 @@ Planned: Google sign-in (GIS token model, browser-only) + Google Drive (prefer s
 OAuth can't work from file:// → Google features off when `IS_FILE_BUILD` (`@/shared/env`).
 Stack: Vite 8, React 19, TS strict, CSS Modules + CSS-var tokens, Vitest, oxlint, Prettier, dependency-cruiser. npm, Node 22.
 
+## Act only on explicit requests (top rule)
+
+- Default: every user message is dialogue (question, answer, idea, opinion), not a task. Answer it; reading code to answer correctly is fine.
+- Do only what the user explicitly asked, exactly that scope. Nothing "while at it"; extras → propose, don't do.
+- Unsure whether it's a request, or what exactly to do → before any action at all (reads, commands, edits, commits) list the planned steps and ask whether to apply. Wait for OK.
+
 ## Product
 
 - Users: «мастера» of student brigades (РСО): the layer between «бойцы» (people in a squad, sometimes other squads) and the regional HQ, which gets clean data + squad reports of several kinds.
