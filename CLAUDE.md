@@ -41,6 +41,7 @@ Stack: Vite 8, React 19, TS strict, CSS Modules + CSS-var tokens, Vitest, oxlint
 - `claude-development`: default working branch (work + tests with Claude). Commit and push here; never create new branches unless asked. If the session was assigned another branch (e.g. `claude/*`), still work in `claude-development`.
 - `testers-prerelease`: pre-release builds for testers. `main`: releases + Pages. Push/merge into `testers-prerelease` or `main` only with the user's explicit OK.
 - Compatibility is owed only to what shipped in `main` (released versions). Work in `claude-development` / `testers-prerelease` may break formats, APIs and stored data freely: no migrations or shims between unreleased states.
+- Workaround kept only for `main` compatibility → log it in `docs/workarounds.md` (template inside) + `// workaround: W-NNN` in code; delete the entry with the code. Grep it by area before touching code; don't read it whole. The file lives only in `claude-development`: drop it when merging into `testers-prerelease`/`main`, keep it when merging those back.
 - Commit author: `git config user.name "Tost"` + `git config user.email "113260893+TOST2Q7@users.noreply.github.com"` before the first commit of a session. Only goal: commits count in the user's GitHub contribution graph. Trailers (Co-Authored-By etc.) don't matter.
 
 ## Sensitive data (app handles confidential docs)
